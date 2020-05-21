@@ -1,12 +1,33 @@
 package com.londonappbrewery.climapm;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 public class WeatherDataModel {
 
     // TODO: Declare the member variables here
-
+    private  String mTemperature;
+    private int mCondition;
+    private  String mCity;
+    private  String mIconName;
 
     // TODO: Create a WeatherDataModel from a JSON:
+    public static WeatherDataModel fromJSON(JSONObject jsonObject){
+        WeatherDataModel weatherData=new WeatherDataModel();
+        try{
+            weatherData.mCity=jsonObject.getString("name");
 
+            weatherData.mCondition=jsonObject.getJSONArray("weather").getJSONObject(0).getInt("id");
+            weatherData.mIconName=updateWeatherIcon(weatherData.mCondition);
+
+            double temp=jsonObject.getJSONObject("main").getDouble("temp");
+            weatherData.mTemperature=String.valueOf((int)(temp-273.15));
+            return  weatherData;
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
 
     // TODO: Uncomment to this to get the weather image name from the condition:
    private static String updateWeatherIcon(int condition) {
@@ -43,5 +64,15 @@ public class WeatherDataModel {
     // TODO: Create getter methods for temperature, city, and icon name:
 
 
+    public String getmTemperature() {
+        return mTemperature+"°";
+    }
 
+    public String getmCity() {
+        return mCity;
+    }
+
+    public String getmIconName() {
+        return mIconName;
+    }
 }
